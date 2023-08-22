@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Form;
+use App\Http\Controllers\FormController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::view('/form', 'Form.create');
+Route::post('/form', [FormController::class,'store'])->name('form.store');
