@@ -21,7 +21,7 @@ export default class CRUD {
             },
         });
     }
-    checkIfNotEmpty(para, paraErr, message = "") {
+    checkInputIfEmpty(para, paraErr, message = "") {
         let varFields = "";
         if ($.trim(para.val()).length == 0) {
             if (message != "") {
@@ -38,38 +38,31 @@ export default class CRUD {
         }
     }
 
-    updateInfo(id) {
-        return new Promise((resolve, reject) => {
-            $.ajax({
-                url: `ajax/${this.routeName}.php?mode=select`,
-                method: "POST",
-                data: { id: id },
-                dataType: "JSON",
-                success: function (data) {
-                    resolve(data);
-                },
-                error: function (error) {
-                    reject(error);
-                },
-            });
-        });
+    select(route,id) {
+
+        return $.ajax({
+            url: route,
+            method: "POST",
+            data: { id: id },
+            async: false,
+            dataType: "json",
+        }).responseJSON;
     }
 
-    updateData(form_data) {
+    updateData(route,form_data,resetForm='#formUpdate',hideMoel = '#editModal') {
         $.ajax({
-            url: `ajax/${this.routeName}.php?mode=update`,
-            method: "POST",
+            url: route,
+            method: "PUT",
             data: form_data,
             success: function (data) {
-                data = JSON.parse(data);
                 if (data.status == "success") {
                     swal.fire(data.message, data.message, "success");
                 } else if (data.status == "failed") {
                     swal.fire(data.message, data.message, "info");
                 }
-                $("#formUpdate")[0].reset();
-                $("#updateModel").modal("hide");
-                this.loadData();
+                $(resetForm)[0].reset();
+                $(hideMoel).modal("hide");
+                this.loadData(this.routeName);
             }.bind(this),
         });
     }
@@ -80,7 +73,6 @@ export default class CRUD {
             method: "POST",
             data: form_data,
             success: function (data) {
-                // data = JSON.parse(data);
                 if (data.status == "success") {
                     swal.fire(data.message, data.message, "success");
                 } else if (data.status == "failed") {
@@ -93,6 +85,7 @@ export default class CRUD {
         });
     }
 
+    // usage         crud.deleteData('/route/{id}', id);
     deleteData(route,id) {
         swal.fire({
             title: "Are you sure?",
@@ -106,7 +99,6 @@ export default class CRUD {
                     method: "DELETE",
                     data: { id: id },
                     success: function (data) {
-                        data = JSON.parse(data);
                         if (data.status == "success") {
                             swal.fire(data.message, data.message, "success");
                         } else if (data.status == "failed") {

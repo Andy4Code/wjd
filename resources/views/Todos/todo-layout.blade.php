@@ -13,7 +13,7 @@
 <body class="container mt-5">
     @yield('content')
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module" src="{{ asset('js/abst.js') }}" defer></script>

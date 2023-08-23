@@ -32,8 +32,8 @@ class TodoController extends Controller
                     <td>' . $data->title . '</td>
                     <td>' . $data->desc . '</td>
                     <td class="d-flex">
-                    <a href="' . route('todos.show', $data->id) . '" class="mx-1 btn btn-sm btn-secondry">view</a>
-                    <a href="' . route('todos.edit', $data->id) . '" class="mx-1 btn btn-sm btn-primary">edit</a>
+                    <a href="' . route('todos.show', $data->id) . '" class="mx-1 btn btn-sm btn-light">view</a>
+                    <button  data-id="'.$data->id.'" class=" btn-edit btn btn-sm btn-primary mx-1">Edit</button>
                     <button  data-id="'.$data->id.'" class=" btn-delete btn btn-sm btn-danger mx-1">Delete</button>
                     </td>
                 </tr>';
@@ -41,7 +41,13 @@ class TodoController extends Controller
         $table .= '</tbody>
         </table>';
 
+
         return $table;
+    }
+
+
+    public function selectSingleAsJson(string $id){
+        return response()->json(['data' => Todo::findOrFail($id)]);
     }
     public function index()
     {
@@ -64,7 +70,7 @@ class TodoController extends Controller
     {
         Todo::create($request->validate([
             'title' => 'required|string',
-            'desc' => 'string'
+            'desc' => 'nullable|string'
         ]));
 
         return response()->json(['message' => 'Created Successfully','status'=>'success']);
@@ -75,7 +81,8 @@ class TodoController extends Controller
      */
     public function show(string $id)
     {
-        return view('Todos.show');
+        $todo = Todo::findOrFail($id);
+        return view('Todos.show',compact('todo'));
     }
 
     /**
@@ -91,13 +98,18 @@ class TodoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Todo::where('id',$id)->update($request->validate([
+            'title' => 'required|string',
+            'desc' => 'nullable|string'
+        ]));
+
+        return response()->json(['message' => 'Update Successfully','status'=>'success']);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function delete(string $id)
     {
         $x =  Todo::findOrFail($id);
         if($x->delete()){

@@ -22,15 +22,16 @@ Route::get('/', function () {
 
 
 // Todo using ajax
-// Route::resource('/todos',TodoController::class);
-Route::get('/todos',[TodoController::class,'index']);
+ Route::resource('/tddd',TodoController::class);
+Route::get('/todos',[TodoController::class,'index'])->name('todos.index');
 // this route will return a table view
 Route::post('/todos/all',[TodoController::class,'all'])->name('todos.all');
 Route::post('/todos/store',[TodoController::class,'store'])->name('todos.store');
 Route::get('/todos/{id}',[TodoController::class,'show'])->name('todos.show');
 Route::get('/todos/{id}/edit',[TodoController::class,'edit'])->name('todos.edit');
-Route::put('/todos/update',[TodoController::class,'update'])->name('todos.update');
-Route::Delete('/todos/{id}',[TodoController::class,'destroy'])->name('todos.destroy');
+Route::put('/todos/{id}',[TodoController::class,'update'])->name('todos.update');
+Route::delete('/todos/{id}',[TodoController::class,'delete'])->name('todos.delete');
+Route::post('/todos/{id}/json',[TodoController::class,'selectSingleAsJson'])->name('todos.single');
 
 // form validation
 Route::view('/form', 'Form.create');
